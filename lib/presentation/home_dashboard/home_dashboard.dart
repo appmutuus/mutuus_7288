@@ -195,6 +195,67 @@ class _HomeDashboardState extends State<HomeDashboard>
     NotificationService.show('Neuer Karma-Job erstellt: ${newJob['title']}');
   }
 
+  void _showMainMenu() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildMenuItem('Startseite', 'home', () {
+                Navigator.pushNamed(context, '/home-dashboard');
+              }),
+              _buildMenuItem('Jobs', 'search', () {
+                // TODO: Navigate to Jobs screen
+              }),
+              _buildMenuItem('Profil', 'person', () {
+                // TODO: Navigate to Profile screen
+              }),
+              _buildMenuItem('Wallet', 'account_balance_wallet', () {
+                Navigator.pushNamed(context, '/digital-wallet');
+              }),
+              _buildMenuItem('Community', 'group', () {
+                // TODO: Navigate to Community screen
+              }),
+              _buildMenuItem('Einstellungen', 'settings', () {
+                Navigator.pushNamed(context, '/settings-and-account');
+              }),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // TODO: Premium Upsell action
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppTheme.lightTheme.primaryColor,
+                    foregroundColor: Colors.white,
+                    minimumSize: const Size.fromHeight(48),
+                  ),
+                  child: const Text('Premium werden'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMenuItem(String title, String icon, VoidCallback onTap) {
+    return ListTile(
+      leading: CustomIconWidget(
+        iconName: icon,
+        color: AppTheme.lightTheme.primaryColor,
+      ),
+      title: Text(title),
+      onTap: () {
+        Navigator.pop(context);
+        onTap();
+      },
+    );
+  }
+
   Widget _buildJobSection({
     required String title,
     required List<Map<String, dynamic>> jobs,
@@ -372,15 +433,15 @@ class _HomeDashboardState extends State<HomeDashboard>
                 color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
-              label: 'Suchen',
+              label: 'Jobs',
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'message',
+                iconName: 'menu',
                 color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
-              label: 'Nachrichten',
+              label: 'Menü',
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
@@ -392,11 +453,11 @@ class _HomeDashboardState extends State<HomeDashboard>
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'more_horiz',
+                iconName: 'settings',
                 color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
-              label: 'Mehr',
+              label: 'Einstellungen',
             ),
           ],
           onTap: (index) {
@@ -410,16 +471,17 @@ class _HomeDashboardState extends State<HomeDashboard>
                 // Already on Home
                 break;
               case 1:
-                // Navigate to Search
+                // Navigate to Jobs
                 break;
               case 2:
-                // Navigate to Messages
+                // Open Menu
+                _showMainMenu();
                 break;
               case 3:
                 // Navigate to Profile
                 break;
               case 4:
-                // Navigate to More/Settings
+                // Navigate to Settings
                 Navigator.pushNamed(context, '/settings-and-account');
                 break;
             }
