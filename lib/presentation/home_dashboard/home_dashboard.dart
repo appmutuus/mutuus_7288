@@ -198,44 +198,112 @@ class _HomeDashboardState extends State<HomeDashboard>
   void _showMainMenu() {
     showModalBottomSheet(
       context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
-        return SafeArea(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildMenuItem('Startseite', 'home', () {
-                Navigator.pushNamed(context, '/home-dashboard');
-              }),
-              _buildMenuItem('Jobs', 'search', () {
-                // TODO: Navigate to Jobs screen
-              }),
-              _buildMenuItem('Profil', 'person', () {
-                // TODO: Navigate to Profile screen
-              }),
-              _buildMenuItem('Wallet', 'account_balance_wallet', () {
-                Navigator.pushNamed(context, '/digital-wallet');
-              }),
-              _buildMenuItem('Community', 'group', () {
-                // TODO: Navigate to Community screen
-              }),
-              _buildMenuItem('Einstellungen', 'settings', () {
-                Navigator.pushNamed(context, '/settings-and-account');
-              }),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: Premium Upsell action
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.lightTheme.primaryColor,
-                    foregroundColor: Colors.white,
-                    minimumSize: const Size.fromHeight(48),
+        return Container(
+          decoration: BoxDecoration(
+            color: AppTheme.lightTheme.colorScheme.surface,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          child: SafeArea(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Handle bar
+                Container(
+                  margin: EdgeInsets.only(top: 2.h, bottom: 1.h),
+                  width: 12.w,
+                  height: 0.5.h,
+                  decoration: BoxDecoration(
+                    color: AppTheme.lightTheme.colorScheme.onSurfaceVariant
+                        .withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2),
                   ),
-                  child: const Text('Premium werden'),
                 ),
-              ),
-            ],
+                
+                // Menu title
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+                  child: Text(
+                    'Menü',
+                    style: AppTheme.lightTheme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                
+                // Menu items
+                _buildMenuItem('Startseite', 'home', () {
+                  Navigator.pop(context);
+                  // Already on home, just close menu
+                }),
+                _buildMenuItem('Jobs', 'work', () {
+                  Navigator.pop(context);
+                  // TODO: Navigate to Jobs screen
+                }),
+                _buildMenuItem('Profil', 'person', () {
+                  Navigator.pop(context);
+                  // TODO: Navigate to Profile screen
+                }),
+                _buildMenuItem('Wallet', 'account_balance_wallet', () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/digital-wallet');
+                }),
+                _buildMenuItem('Community', 'group', () {
+                  Navigator.pop(context);
+                  // TODO: Navigate to Community screen
+                }),
+                _buildMenuItem('Einstellungen', 'settings', () {
+                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/settings-and-account');
+                }),
+                
+                // Premium button
+                Container(
+                  margin: EdgeInsets.all(4.w),
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                      // TODO: Premium Upsell action
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppTheme.warningLight,
+                      foregroundColor: Colors.white,
+                      padding: EdgeInsets.symmetric(vertical: 2.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomIconWidget(
+                          iconName: 'star',
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                        SizedBox(width: 2.w),
+                        Text(
+                          'Premium werden',
+                          style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                
+                SizedBox(height: 2.h),
+              ],
+            ),
           ),
         );
       },
@@ -243,16 +311,45 @@ class _HomeDashboardState extends State<HomeDashboard>
   }
 
   Widget _buildMenuItem(String title, String icon, VoidCallback onTap) {
-    return ListTile(
-      leading: CustomIconWidget(
-        iconName: icon,
-        color: AppTheme.lightTheme.primaryColor,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 2.h),
+        child: Row(
+          children: [
+            Container(
+              width: 12.w,
+              height: 12.w,
+              decoration: BoxDecoration(
+                color: AppTheme.lightTheme.colorScheme.primary
+                    .withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: CustomIconWidget(
+                  iconName: icon,
+                  color: AppTheme.lightTheme.primaryColor,
+                  size: 24,
+                ),
+              ),
+            ),
+            SizedBox(width: 4.w),
+            Expanded(
+              child: Text(
+                title,
+                style: AppTheme.lightTheme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+            CustomIconWidget(
+              iconName: 'chevron_right',
+              color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+              size: 20,
+            ),
+          ],
+        ),
       ),
-      title: Text(title),
-      onTap: () {
-        Navigator.pop(context);
-        onTap();
-      },
     );
   }
 
@@ -413,7 +510,7 @@ class _HomeDashboardState extends State<HomeDashboard>
           ],
         ),
         child: BottomNavigationBar(
-          currentIndex: 0, // Home is active
+          currentIndex: _selectedTabIndex,
           type: BottomNavigationBarType.fixed,
           backgroundColor: AppTheme.lightTheme.cardColor,
           selectedItemColor: AppTheme.lightTheme.primaryColor,
@@ -421,40 +518,50 @@ class _HomeDashboardState extends State<HomeDashboard>
           items: [
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'home',
-                color: AppTheme.lightTheme.primaryColor,
+                iconName: _selectedTabIndex == 0 ? 'home' : 'home',
+                color: _selectedTabIndex == 0 
+                    ? AppTheme.lightTheme.primaryColor 
+                    : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
               label: 'Home',
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'search',
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                iconName: _selectedTabIndex == 1 ? 'work' : 'work',
+                color: _selectedTabIndex == 1 
+                    ? AppTheme.lightTheme.primaryColor 
+                    : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
               label: 'Jobs',
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'menu',
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                iconName: _selectedTabIndex == 2 ? 'menu' : 'menu',
+                color: _selectedTabIndex == 2 
+                    ? AppTheme.lightTheme.primaryColor 
+                    : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
               label: 'Menü',
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'person',
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                iconName: _selectedTabIndex == 3 ? 'person' : 'person',
+                color: _selectedTabIndex == 3 
+                    ? AppTheme.lightTheme.primaryColor 
+                    : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
               label: 'Profil',
             ),
             BottomNavigationBarItem(
               icon: CustomIconWidget(
-                iconName: 'settings',
-                color: AppTheme.lightTheme.colorScheme.onSurfaceVariant,
+                iconName: _selectedTabIndex == 4 ? 'settings' : 'settings',
+                color: _selectedTabIndex == 4 
+                    ? AppTheme.lightTheme.primaryColor 
+                    : AppTheme.lightTheme.colorScheme.onSurfaceVariant,
                 size: 24,
               ),
               label: 'Einstellungen',
@@ -471,17 +578,17 @@ class _HomeDashboardState extends State<HomeDashboard>
                 // Already on Home
                 break;
               case 1:
-                // Navigate to Jobs
+                // TODO: Navigate to Jobs screen
                 break;
               case 2:
                 // Open Menu
                 _showMainMenu();
                 break;
               case 3:
-                // Navigate to Profile
+                // TODO: Navigate to Profile screen
                 break;
               case 4:
-                // Navigate to Settings
+                // Navigate to Einstellungen
                 Navigator.pushNamed(context, '/settings-and-account');
                 break;
             }
