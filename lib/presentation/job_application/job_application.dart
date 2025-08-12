@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
+import '../../services/karma_service.dart';
+import '../../services/notification_service.dart';
 import './widgets/application_terms_section.dart';
 import './widgets/availability_section.dart';
 import './widgets/job_summary_card.dart';
@@ -213,6 +215,16 @@ class _JobApplicationState extends State<JobApplication>
 
       // Show success animation
       await _showSuccessAnimation();
+
+      // Award karma for karma-based jobs
+      if (jobData['paymentType'] == 'karma') {
+        final points = jobData['karmaPoints'] as int? ?? 0;
+        final updated = await KarmaService.addKarma(points);
+        final rank = KarmaService.rankForKarma(updated);
+        NotificationService.show('Karma-Job angenommen: +$points Karma (Rang: $rank)');
+      } else {
+        NotificationService.show('Bewerbung gesendet');
+      }
 
       // Navigate to applications screen
       if (mounted) {

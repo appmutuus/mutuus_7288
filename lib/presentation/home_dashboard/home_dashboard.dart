@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
 import '../../core/app_export.dart';
+import '../../services/karma_service.dart';
+import '../../services/notification_service.dart';
 import './widgets/empty_state_widget.dart';
 import './widgets/greeting_header_widget.dart';
 import './widgets/job_card_widget.dart';
@@ -126,11 +128,20 @@ class _HomeDashboardState extends State<HomeDashboard>
     },
   ];
 
+  Future<void> _loadUserData() async {
+    final karma = await KarmaService.getKarma();
+    setState(() {
+      _userData['karmaPoints'] = karma;
+      _userData['currentRank'] = KarmaService.rankForKarma(karma);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _scrollController = ScrollController();
     _tabController = TabController(length: 5, vsync: this);
+    _loadUserData();
   }
 
   @override
@@ -165,13 +176,23 @@ class _HomeDashboardState extends State<HomeDashboard>
   }
 
   void _createNewJob() {
-    // Navigate to job creation flow
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Job erstellen wird geöffnet...'),
-        duration: Duration(seconds: 2),
-      ),
-    );
+    final newJob = {
+      'id': DateTime.now().millisecondsSinceEpoch,
+      'title': 'Nachbarschaftshilfe',
+      'description': 'Hilf einem Nachbarn beim Einkauf.',
+      'category': 'Hilfe',
+      'categoryIcon': 'favorite',
+      'paymentType': 'karma',
+      'karmaPoints': 30,
+      'distance': 0.0,
+      'deadline': 'Heute',
+      'requiredRank': 'Starter',
+      'isPremium': false,
+    };
+    setState(() {
+      _newJobs.add(newJob);
+    });
+    NotificationService.show('Neuer Karma-Job erstellt: ${newJob['title']}');
   }
 
   Widget _buildJobSection({
