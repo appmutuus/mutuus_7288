@@ -6,6 +6,9 @@ import '../presentation/login_screen/login_screen.dart';
 import '../presentation/register_screen/register_screen.dart';
 import '../presentation/digital_wallet/digital_wallet.dart';
 import '../presentation/job_details/job_details.dart';
+import '../presentation/jobs_screen/jobs_screen.dart';
+import '../presentation/profile_screen/profile_screen.dart';
+import '../presentation/community_screen/community_screen.dart';
 
 class AppRoutes {
   // TODO: Add your routes here
@@ -17,6 +20,9 @@ class AppRoutes {
   static const String digitalWallet = '/digital-wallet';
   static const String jobDetails = '/job-details';
   static const String register = '/register-screen';
+  static const String jobs = '/jobs';
+  static const String profile = '/profile';
+  static const String community = '/community';
 
   static Map<String, WidgetBuilder> routes = {
     initial: (context) => const LoginScreen(),
@@ -27,6 +33,9 @@ class AppRoutes {
     digitalWallet: (context) => const DigitalWallet(),
     jobDetails: (context) => const JobDetails(),
     register: (context) => const RegisterScreen(),
+    jobs: (context) => const JobsScreen(),
+    profile: (context) => const ProfileScreen(),
+    community: (context) => const CommunityScreen(),
     // TODO: Add your other routes here
   };
 }

@@ -207,16 +207,16 @@ class _HomeDashboardState extends State<HomeDashboard>
                 Navigator.pushNamed(context, '/home-dashboard');
               }),
               _buildMenuItem('Jobs', 'search', () {
-                // TODO: Navigate to Jobs screen
+                Navigator.pushNamed(context, AppRoutes.jobs);
               }),
               _buildMenuItem('Profil', 'person', () {
-                // TODO: Navigate to Profile screen
+                Navigator.pushNamed(context, AppRoutes.profile);
               }),
               _buildMenuItem('Wallet', 'account_balance_wallet', () {
                 Navigator.pushNamed(context, '/digital-wallet');
               }),
               _buildMenuItem('Community', 'group', () {
-                // TODO: Navigate to Community screen
+                Navigator.pushNamed(context, AppRoutes.community);
               }),
               _buildMenuItem('Einstellungen', 'settings', () {
                 Navigator.pushNamed(context, '/settings-and-account');
@@ -471,14 +471,14 @@ class _HomeDashboardState extends State<HomeDashboard>
                 // Already on Home
                 break;
               case 1:
-                // Navigate to Jobs
+                Navigator.pushNamed(context, AppRoutes.jobs);
                 break;
               case 2:
                 // Open Menu
                 _showMainMenu();
                 break;
               case 3:
-                // Navigate to Profile
+                Navigator.pushNamed(context, AppRoutes.profile);
                 break;
               case 4:
                 // Navigate to Settings
