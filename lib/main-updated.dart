@@ -12,6 +12,7 @@ import 'package:sizer/sizer.dart';
 
 import '../core/app_export.dart';
 import '../widgets/custom_error_widget.dart';
+import '../core/supabase_service.dart';
 
 var backendURL = "https://mutuus5375back.builtwithrocket.new/log-error";
 
@@ -20,6 +21,7 @@ void main() async {
     _sendOverflowError(details);
   };
   WidgetsFlutterBinding.ensureInitialized();
+  await SupabaseService.init();
 
   // 🚨 CRITICAL: Custom error handling - DO NOT REMOVE
   ErrorWidget.builder = (FlutterErrorDetails details) {
@@ -28,11 +30,8 @@ void main() async {
     );
   };
   // 🚨 CRITICAL: Device orientation lock - DO NOT REMOVE
-  Future.wait([
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-  ]).then((value) {
-    runApp(MyApp());
-  });
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
