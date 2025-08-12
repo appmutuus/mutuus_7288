@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../core/app_export.dart';
 import '../../theme/app_theme.dart';
@@ -19,13 +20,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isGoogleLoading = false;
   bool _isEmailLoading = false;
   final FocusNode _focusNode = FocusNode();
-
-  // Mock credentials for testing
-  final Map<String, String> _mockCredentials = {
-    'admin@mutuus.de': 'admin123',
-    'user@mutuus.de': 'user123',
-    'helper@mutuus.de': 'helper123',
-  };
 
   @override
   void dispose() {
@@ -68,25 +62,23 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     try {
-      // Simulate authentication delay
-      await Future.delayed(const Duration(seconds: 1));
-
-      // Check mock credentials
-      if (_mockCredentials.containsKey(email) &&
-          _mockCredentials[email] == password) {
-        // Haptic feedback for success
+      final res = await SupabaseService.signIn(email, password);
+      if (res.session != null) {
         HapticFeedback.lightImpact();
-
         if (mounted) {
           _navigateToHome();
         }
       } else {
         if (mounted) {
-          _showErrorMessage(
-              'Ungültige E-Mail-Adresse oder Passwort. Bitte überprüfen Sie Ihre Eingaben.');
+          _showErrorMessage(res.error?.message ??
+              'Ungültige E-Mail-Adresse oder Passwort.');
         }
       }
-    } catch (e) {
+    } on AuthException catch (e) {
+      if (mounted) {
+        _showErrorMessage(e.message);
+      }
+    } catch (_) {
       if (mounted) {
         _showErrorMessage(
             'Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.');
@@ -241,14 +233,8 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: (_isGoogleLoading || _isEmailLoading)
                               ? null
                               : () {
-                                  // Handle sign up navigation
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'Registrierung wird bald verfügbar sein'),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
+                                  Navigator.pushNamed(
+                                      context, AppRoutes.register);
                                 },
                           style: TextButton.styleFrom(
                             padding: EdgeInsets.symmetric(
