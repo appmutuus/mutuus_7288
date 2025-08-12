@@ -15,6 +15,18 @@ class SupabaseService {
     return client.auth.signInWithPassword(email: email, password: password);
   }
 
+  static Future<AuthResponse> signUp(
+    String email,
+    String password, {
+    String? name,
+  }) {
+    return client.auth.signUp(
+      email: email,
+      password: password,
+      data: name != null ? {'name': name} : null,
+    );
+  }
+
   static Future<dynamic> fetchTable(String table) {
     return client.from(table).select();
   }
